@@ -5,7 +5,7 @@
 
 2) Fetch current pair price - better for automatization
 
-3) Fetch current alerts, to improve management
+3) [OK] Fetch current alerts, to improve management
 
 
 # Dependencies & Installation
@@ -15,6 +15,8 @@
 2) Copy the investing.com pair indexes ids into your home as ~/.investing_com.indexes
 
 3) Copy the script into whatever path you want, I use it at ~/bin
+
+4) Install Scrapy (through Python Pip)
 
 # Alert Usage
 
