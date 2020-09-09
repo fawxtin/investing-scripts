@@ -2,6 +2,7 @@
 
 script_name="$0"
 indexes_file="${HOME}/.investing_com.indexes"
+scrapy_folder="${HOME}/self/investing.com/alert/"
 
 #
 # Needs from apt:
@@ -14,6 +15,7 @@ function usage
     echo -e "[Usage]:\n\t${script_name} pair (over/under) price [message]\n"
     echo -e "\t${script_name} pair around price step N_steps\n"
     echo -e "\t${script_name} pair around price step N_steps-UP N_steps-DOWN\n"
+    echo -e "\t${script_name} view pair1,pair2,pair3 (default to all)\n"
 }
 
 function match_pair
@@ -29,6 +31,26 @@ function match_pair
 	usage
 	exit 1
     fi
+}
+
+function match_pairs
+{
+    if [ ! -e "${indexes_file}" ]; then
+	echo "[error] Hmm, could not find pairs indexes file: ${indexes_file}"
+	exit 1
+    fi
+
+    pairs=""
+    for i in $(echo "$1" | sed "s/,/ /g"); do
+	pair=$(grep "${i}=" "${indexes_file}" | sed -e 's/'${i}'=\(.*\)/\1/')
+	if [ -n "$pair" ]; then
+	    if [ -z "$pairs" ]; then
+		pairs="$pair"
+	    else
+		pairs="$pairs,$pair"
+	    fi
+	fi
+    done
 }
 
 function match_action
@@ -95,22 +117,49 @@ function generate_alert_around
 
 }
 
+function view_alerts
+{
+    tmp_output_dir="${HOME}/tmp/scrapy/"
+    tmp_output_jsonfile="${tmp_output_dir}/investing.com_alerts_`date +%s`.json"
+    mkdir -p "${tmp_output_dir}"
 
-match_pair "$1" # will set $pair
+    pairs="$1"
+    scrapy runspider "${scrapy_folder}/investing-spider-alert-list.py" -o "${tmp_output_jsonfile}" --nolog
+    python3 "${scrapy_folder}/investing-alert-view.py" "${tmp_output_jsonfile}" "$pairs"
+}
+
+
+###
+### Main stuff
+###
+
 action="$2"
-price=$(urlencode $3)
 
 case "${action}" in
     "over" )
+	match_pair "$1"
 	msg=$(urlencode "$4");
+	price=$(urlencode $3)
 	send_alert "$action" "$price" "$msg";
 	;;
     "under" )
+	match_pair "$1"
 	msg=$(urlencode "$4");
+	price=$(urlencode $3)
 	send_alert "$action" "$price" "$msg";
 	;;
     "around" )
+	match_pair "$1"
+	price=$(urlencode $3)
 	generate_alert_around "$price" "$4" "${5:-3}" "$6";
+	;;
+    "view" )
+	if [ "$1" == "all" ]; then
+	    view_alerts
+	else
+	    match_pairs "$1"	    
+	    view_alerts "$pairs"
+	fi
 	;;
     * )
 	echo "[error] Unknown action: '${action}'"
