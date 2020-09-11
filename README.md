@@ -7,7 +7,11 @@
 
 3) [OK] Fetch current alerts, to improve management
 
-4) Improve panel visualization - through colors
+4) [~OK] Improve panel visualization - through colors
+
+5) Check pair-id values from exchanges
+
+6) make deps <- to check for dependencies
 
 
 # Dependencies & Installation
@@ -60,8 +64,8 @@ investing-alert gold around 1950 10 0 5
 Show all alerts arranged by pairs.
 
 ```
-$ investing-alert-view all
-$ investing-alert-view eurusd,eurjpy
+$ investing-alert all view
+$ investing-alert eurusd,eurjpy view 
 ```
 
 # Portfolio usage

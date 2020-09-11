@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 
 script_name="$0"
+script_basedir=$(dirname `which $0`)
 indexes_file="${HOME}/.investing_com.indexes"
 scrapy_folder="${HOME}/self/investing.com/spiders/"
 
@@ -22,9 +23,9 @@ function view_portfolio
 
     scrapy runspider "${scrapy_folder}/investing-spider-portfolio-list.py" -o "${tmp_output_jsonfile}" --nolog
     if [ -z "$1" ] || [ "$1" == "view" ]; then
-	investing-portfolio-view "${tmp_output_jsonfile}"
+	python3 "${script_basedir}/investing-portfolio-view.py" "${tmp_output_jsonfile}"
     else
-	investing-portfolio-panel "${tmp_output_jsonfile}"
+	python3 "${script_basedir}/investing-portfolio-panel.py" "${tmp_output_jsonfile}"
     fi
 }
 

@@ -5,6 +5,7 @@ import os
 import sys
 import json
 from collections import defaultdict
+from termcolor import colored, cprint
 
 def usage(script):
     print("[Usage] {} filename".format(script))
@@ -24,15 +25,16 @@ def parse_jsonfile(filename):
 def pretty_print_alerts(alerts, filter_only=[]):
     for pair_id, pair_alerts in alerts.items():
         if not filter_only or pair_id in filter_only:
-            print("  ++++++++++++++++++++++++++++++".format(pair_alerts['pairName']))
-            print("  ++++++++++++ {} ".format(pair_alerts['pairName']))
-            print("  ++++++++++++++++++++++++++++++".format(pair_alerts['pairName']))
+            cprint(colored("  ++++++++++++++++++++++++++++++".format(pair_alerts['pairName'])), 'cyan')
+            cprint(colored("  ++++++    ", 'cyan') + colored(pair_alerts['pairName'], 'yellow'))
+            cprint(colored("  ++++++++++++++++++++++++++++++".format(pair_alerts['pairName']), 'cyan'))
             alerts_over = sorted(pair_alerts["over"], key=lambda k: k["value"])
             alerts_under = sorted(pair_alerts["under"], key=lambda k: -k["value"])
             for i in range(0, max([len(alerts_over), len(alerts_under)])):
-                price_over = str(alerts_over[i]['value']) if i < len(alerts_over) else '-----'
-                price_under = str(alerts_under[i]['value']) if i < len(alerts_under) else '-----'
-                print("  {}    /    {}".format(price_under, price_over))
+                price_over = str(alerts_over[i]['value']).replace(',', '') if i < len(alerts_over) else '-----'
+                price_under = str(alerts_under[i]['value']).replace(',', '') if i < len(alerts_under) else '-----'
+                cprint(colored("    {: <10}".format(price_under), 'red') + " / " +
+                       colored("{: >10}".format(price_over), 'green'))
             print("")
 
 

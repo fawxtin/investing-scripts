@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 
 script_name="$0"
+script_basedir=$(dirname `which $0`)
 indexes_file="${HOME}/.investing_com.indexes"
 scrapy_folder="${HOME}/self/investing.com/spiders/"
 
@@ -125,7 +126,7 @@ function view_alerts
 
     pairs="$1"
     scrapy runspider "${scrapy_folder}/investing-spider-alert-list.py" -o "${tmp_output_jsonfile}" --nolog
-    investing-alert-view "${tmp_output_jsonfile}" "$pairs"
+    python3 "${script_basedir}/investing-alert-view.py" "${tmp_output_jsonfile}" "$pairs"
 }
 
 
