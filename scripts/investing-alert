@@ -2,7 +2,7 @@
 
 script_name="$0"
 indexes_file="${HOME}/.investing_com.indexes"
-scrapy_folder="${HOME}/self/investing.com/alert/"
+scrapy_folder="${HOME}/self/investing.com/spiders/"
 
 #
 # Needs from apt:
@@ -125,7 +125,7 @@ function view_alerts
 
     pairs="$1"
     scrapy runspider "${scrapy_folder}/investing-spider-alert-list.py" -o "${tmp_output_jsonfile}" --nolog
-    python3 "${scrapy_folder}/investing-alert-view.py" "${tmp_output_jsonfile}" "$pairs"
+    investing-alert-view "${tmp_output_jsonfile}" "$pairs"
 }
 
 

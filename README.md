@@ -1,11 +1,13 @@
 
 # TODO
 
-1) Create a deploy script - Makefile?
+1) [OK] Create a deploy script - Makefile? <- make install
 
-2) Fetch current pair price - better for automatization
+2) [OK] Fetch current pair price - better for automatization
 
 3) [OK] Fetch current alerts, to improve management
+
+4) Improve panel visualization - through colors
 
 
 # Dependencies & Installation
@@ -52,3 +54,34 @@ investing-alert gold around 1950 30 5 0
 # If I want alerts only under given price 1950, for example, with a step of 10 points as: 1940/1930/1920/1910/1900. The command would be:
 investing-alert gold around 1950 10 0 5
 ```
+
+## View current alerts set
+
+Show all alerts arranged by pairs.
+
+```
+$ investing-alert-view all
+$ investing-alert-view eurusd,eurjpy
+```
+
+# Portfolio usage
+
+Be able to view current prices on the console.
+
+## Show Portfolio
+
+Show given user Portfolio configured at investing.com, with INVESTING_COM_PORTFOLIO variable defined, otherwise it will get default one.
+
+```
+$ investing-portfolio-view
+```
+
+## Portfolio Panel
+
+View Portfolio Panel into a curses window with automatic prices updates if FINNHUB_IO_TOKEN is set and works.
+
+```
+$ investing-portfolio-panel
+```
+
+

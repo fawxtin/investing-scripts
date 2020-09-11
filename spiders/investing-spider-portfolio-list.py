@@ -8,6 +8,7 @@ class MyPair(Item):
     pairName = Field() 
     pairSymbol = Field()
     priceLast = Field()
+    pricePrev = Field()
     priceOpen = Field()
     priceHigh = Field()
     priceLow = Field()
@@ -17,7 +18,7 @@ class MyPair(Item):
 
 class InvestingComPortfolioSpider(Spider):
     """
-    Set your env-var INVESTING_COM_SID
+    Set your env-var INVESTING_COM_TOKEN
     """
     name = 'alert-center'
 
@@ -26,7 +27,7 @@ class InvestingComPortfolioSpider(Spider):
                           headers={'Origin': 'https://www.investing.com/',
                                    'Referer': 'https://www.investing.com/',
                                    'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/84.0.4147.125 Safari/537.36'},
-                          cookies={'ses_id': os.environ.get('INVESTING_COM_SID', "")})
+                          cookies={'ses_id': os.environ.get('INVESTING_COM_TOKEN', "")})
         return [request]
 
     def parse(self, response):
@@ -45,6 +46,8 @@ class InvestingComPortfolioSpider(Spider):
                     pair['pairSymbol'] = content
                 elif el.attrib.get('data-column-name', '') == 'name':
                     pair['pairName'] = content
+                elif el.attrib.get('data-column-name', '') == 'prev':
+                    pair['pricePrev'] = content
                 elif el.attrib.get('data-column-name', '') == 'last':
                     pair['priceLast'] = content
                 elif el.attrib.get('data-column-name', '') == 'high':

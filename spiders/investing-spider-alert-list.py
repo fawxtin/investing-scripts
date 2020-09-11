@@ -12,7 +12,7 @@ class MyAlert(Item):
 
 class InvestingComAlertSpider(Spider):
     """
-    Set your env-var INVESTING_COM_SID
+    Set your env-var INVESTING_COM_TOKEN
     """
     name = 'alert-center'
 
@@ -21,7 +21,7 @@ class InvestingComAlertSpider(Spider):
                           headers={'Origin': 'https://www.investing.com/',
                                    'Referer': 'https://www.investing.com/',
                                    'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/84.0.4147.125 Safari/537.36'},
-                          cookies={'ses_id': os.environ.get('INVESTING_COM_SID', "")})
+                          cookies={'ses_id': os.environ.get('INVESTING_COM_TOKEN', "")})
         return [request]
 
     def parse(self, response):
