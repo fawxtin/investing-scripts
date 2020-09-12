@@ -13,10 +13,15 @@ scrapy_folder="${HOME}/self/investing.com/spiders/"
 
 function usage
 {
-    echo -e "[Usage]:\n\t${script_name} pair (over/under) price [message]\n"
-    echo -e "\t${script_name} pair around price step N_steps\n"
-    echo -e "\t${script_name} pair around price step N_steps-UP N_steps-DOWN\n"
-    echo -e "\t${script_name} view pair1,pair2,pair3 (default to all)\n"
+    echo -e "[Usage]:\n\talert-set\n"
+    echo -e "\t${script_name} alert-set pair (over/under) price [message]"
+    echo -e "\t${script_name} alert-set pair around price step N_steps"
+    echo -e "\t${script_name} alert-set pair around price step N_steps-UP N_steps-DOWN\n"
+    echo -e "\talert-view\n"
+    echo -e "\t${script_name} alert-view pair1,pair2,pair3 (default to all)\n"
+    echo -e "\tportfolio\n"
+    echo -e "\t${script_name} portfolio panel"
+    echo -e "\t${script_name} portfolio view\n"
 }
 
 function match_pair
@@ -118,6 +123,33 @@ function generate_alert_around
 
 }
 
+function set_alerts
+{
+    match_pair "$1"
+    
+    case "${2}" in
+	"over" )
+	    msg=$(urlencode "$4");
+	    price=$(urlencode $3)
+	    send_alert "$2" "$price" "$msg";
+	    ;;
+	"under" )
+	    msg=$(urlencode "$4");
+	    price=$(urlencode $3)
+	    send_alert "$2" "$price" "$msg";
+	    ;;
+	"around" )
+	    price=$(urlencode $3)
+	    generate_alert_around "$price" "$4" "${5:-3}" "$6";
+	    ;;
+	* )
+	    echo "[error] Unknown alert-set action: '${2}'"
+	    usage
+	    exit 1
+	    ;;
+    esac
+}
+
 function view_alerts
 {
     tmp_output_dir="${HOME}/tmp/scrapy/"
@@ -130,37 +162,39 @@ function view_alerts
 }
 
 
+function view_portfolio
+{
+    tmp_output_dir="${HOME}/tmp/scrapy/"
+    tmp_output_jsonfile="${tmp_output_dir}/investing.com_portfolio_`date +%s`.json"
+    mkdir -p "${tmp_output_dir}"
+
+    scrapy runspider "${scrapy_folder}/investing-spider-portfolio-list.py" -o "${tmp_output_jsonfile}" --nolog
+    if [ "$1" == "panel" ]; then
+	python3 "${script_basedir}/investing-portfolio-panel.py" "${tmp_output_jsonfile}"
+    else
+	python3 "${script_basedir}/investing-portfolio-view.py" "${tmp_output_jsonfile}"
+    fi
+}
 ###
 ### Main stuff
 ###
 
-action="$2"
+action="$1"
 
 case "${action}" in
-    "over" )
-	match_pair "$1"
-	msg=$(urlencode "$4");
-	price=$(urlencode $3)
-	send_alert "$action" "$price" "$msg";
+    "alert-set" )
+	set_alerts "$2" "$3" "$4" "$5" "$6" "$7"
 	;;
-    "under" )
-	match_pair "$1"
-	msg=$(urlencode "$4");
-	price=$(urlencode $3)
-	send_alert "$action" "$price" "$msg";
-	;;
-    "around" )
-	match_pair "$1"
-	price=$(urlencode $3)
-	generate_alert_around "$price" "$4" "${5:-3}" "$6";
-	;;
-    "view" )
-	if [ "$1" == "all" ]; then
+    "alert-view" )
+	if [ -z "$2" ]; then
 	    view_alerts
 	else
-	    match_pairs "$1"	    
+	    match_pairs "$2"
 	    view_alerts "$pairs"
 	fi
+	;;
+    "portfolio" )
+	view_portfolio "$2"
 	;;
     * )
 	echo "[error] Unknown action: '${action}'"
