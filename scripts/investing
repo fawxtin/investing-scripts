@@ -88,7 +88,7 @@ function send_alert
 	 -H 'Sec-Fetch-Dest: empty' \
 	 -H 'Referer: https://www.investing.com/members-admin/alert-center' \
 	 -H 'Accept-Language: en-US,en;q=0.9,pt;q=0.8' \
-	 -H "Cookie: ses_id=${INVESTING_COM_SID}" \
+	 -H "Cookie: ses_id=${INVESTING_COM_TOKEN}" \
 	 --data-raw "alertType=instrument&alertParams%5Bpair_ID%5D=${pair}&alertParams%5Bvalue%5D=${2}&alertParams%5Balert_trigger%5D=price&alertParams%5Bfrequency%5D=Once&alertParams%5Bthreshold%5D=${1}&alertParams%5Bplatform%5D=desktop&alertParams%5Bemail_alert%5D=No&alertParams%5BpreReminderText%5D=${3}" \
 	 --compressed
 
