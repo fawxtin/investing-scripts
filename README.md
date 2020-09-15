@@ -13,16 +13,24 @@
 
 6) make deps <- to check for dependencies
 
+7) check needed variables at script start
+
+8) redo websocket connection when closed
+
+9) create tmp path for scrapy outputs
+
+10) install scrapy spiders inside python path location
+
 
 # Dependencies & Installation
 
 1) Install gridsite-clients (from your package manager - apt?) - urlencode
 
-2) Copy the investing.com pair indexes ids into your home as ~/.investing_com.indexes
+2) pip3 install -r requirements.txt
 
-3) Copy the script into whatever path you want, I use it at ~/bin
+3) make install
 
-4) Install Scrapy (through Python Pip)
+4) check your PATH variable if it has ~/bin and ~/.local/bin set up
 
 # Alert Usage
 
