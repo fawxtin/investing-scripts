@@ -21,7 +21,7 @@ NDA0YmUyM2Y0am1kNWM0MQ== <- portfolio forex
 Z2NiNGYyN2k0amtlYzE1MA== <- portfolio indexes
 """
 
-tmp_dir = os.environ['HOME'] + "/tmp/scrapy/"
+tmp_dir = os.environ['HOME'] + "/.local/share/investing.com/logs/"
 tmp_files = glob(tmp_dir + "investing.com_portfolio*.json")
 
 grid = defaultdict(lambda: dict(pair=dict(), order=0)) # by pairId

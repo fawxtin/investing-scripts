@@ -3,7 +3,7 @@
 script_name="$0"
 script_basedir=$(dirname `which $0`)
 indexes_file="${HOME}/.investing_com.indexes"
-scrapy_folder="${HOME}/self/investing.com/spiders/"
+scrapy_folder="${HOME}/.local/share/investing.com/spiders/"
 
 #
 # Needs from apt:
@@ -173,7 +173,7 @@ function set_alerts
 
 function view_alerts
 {
-    tmp_output_dir="${HOME}/tmp/scrapy/"
+    tmp_output_dir="${HOME}/.local/share/investing.com/logs/"
     tmp_output_jsonfile="${tmp_output_dir}/investing.com_alerts_`date +%s`.json"
     mkdir -p "${tmp_output_dir}"
 
@@ -185,7 +185,7 @@ function view_alerts
 
 function view_portfolio
 {
-    tmp_output_dir="${HOME}/tmp/scrapy/"
+    tmp_output_dir="${HOME}/.local/share/investing.com/logs/"
     tmp_output_jsonfile="${tmp_output_dir}/investing.com_portfolio_`date +%s`.json"
     mkdir -p "${tmp_output_dir}"
 
