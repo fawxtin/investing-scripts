@@ -13,12 +13,13 @@ scrapy_folder="${HOME}/self/investing.com/spiders/"
 
 function usage
 {
-    echo -e "[Usage]:\n\talert-set\n"
-    echo -e "\t${script_name} alert-set pair (over/under) price [message]"
-    echo -e "\t${script_name} alert-set pair around price step N_steps"
-    echo -e "\t${script_name} alert-set pair around price step N_steps-UP N_steps-DOWN\n"
-    echo -e "\talert-view\n"
-    echo -e "\t${script_name} alert-view pair1,pair2,pair3 (default to all)\n"
+    echo -e "[Usage]:\n\talert {pair} set\n"
+    echo -e "\t${script_name} alert pair set (over/under) price [message]"
+    echo -e "\t${script_name} alert pair set around price step N_steps"
+    echo -e "\t${script_name} alert pair set around price step N_steps-UP N_steps-DOWN\n"
+    echo -e "\talert {pair} view\n"
+    echo -e "\t${script_name} alert pair1,pair2,pair3 view\n"
+    echo -e "\t${script_name} alert all view\n"
     echo -e "\tportfolio\n"
     echo -e "\t${script_name} portfolio panel"
     echo -e "\t${script_name} portfolio view\n"
@@ -47,16 +48,20 @@ function match_pairs
     fi
 
     pairs=""
-    for i in $(echo "$1" | sed "s/,/ /g"); do
-	pair=$(grep "${i}=" "${indexes_file}" | sed -e 's/'${i}'=\(.*\)/\1/')
-	if [ -n "$pair" ]; then
-	    if [ -z "$pairs" ]; then
-		pairs="$pair"
-	    else
-		pairs="$pairs,$pair"
+    if [ "$1" == "all" ]; then
+	pairs="all"
+    else
+	for i in $(echo "$1" | sed "s/,/ /g"); do
+	    pair=$(grep "${i}=" "${indexes_file}" | sed -e 's/'${i}'=\(.*\)/\1/')
+	    if [ -n "$pair" ]; then
+		if [ -z "$pairs" ]; then
+		    pairs="$pair"
+		else
+		    pairs="$pairs,$pair"
+		fi
 	    fi
-	fi
-    done
+	done
+    fi
 }
 
 function match_action
@@ -123,27 +128,43 @@ function generate_alert_around
 
 }
 
-function set_alerts
+function alerts_cmd
 {
-    match_pair "$1"
-    
-    case "${2}" in
-	"over" )
-	    msg=$(urlencode "$4");
-	    price=$(urlencode $3)
-	    send_alert "$2" "$price" "$msg";
+    alert_cmd="${1}"
+
+    case "${alert_cmd}" in
+	"view" )
+	    view_alerts "$pairs"
 	    ;;
-	"under" )
-	    msg=$(urlencode "$4");
-	    price=$(urlencode $3)
-	    send_alert "$2" "$price" "$msg";
-	    ;;
-	"around" )
-	    price=$(urlencode $3)
-	    generate_alert_around "$price" "$4" "${5:-3}" "$6";
+	"set" )
+	    set_alerts "$2" "$3" "$4" "$5" "$6"
 	    ;;
 	* )
-	    echo "[error] Unknown alert-set action: '${2}'"
+	    echo "[error] Unknown alert set action: ${alert_cmd}"
+	    usage
+	    ;;
+    esac
+}
+
+function set_alerts
+{
+    case "${1}" in
+	"over" )
+	    msg=$(urlencode "$3");
+	    price=$(urlencode $2)
+	    send_alert "$1" "$price" "$msg";
+	    ;;
+	"under" )
+	    msg=$(urlencode "$3");
+	    price=$(urlencode $2)
+	    send_alert "$1" "$price" "$msg";
+	    ;;
+	"around" )
+	    price=$(urlencode $2)
+	    generate_alert_around "$price" "$3" "${4:-2}" "$5";
+	    ;;
+	* )
+	    echo "[error] Unknown alert set action: '${1}'"
 	    usage
 	    exit 1
 	    ;;
@@ -179,22 +200,27 @@ function view_portfolio
 ### Main stuff
 ###
 
+## Check variables
+
+if [ -z "INVESTING_COM_TOKEN" ]; then
+    echo "[error] Missing investing.com token at \$INVESTING_COM_TOKEN"
+    usage
+    exit 1
+fi
+
 action="$1"
+shift
 
 case "${action}" in
-    "alert-set" )
-	set_alerts "$2" "$3" "$4" "$5" "$6" "$7"
-	;;
-    "alert-view" )
-	if [ -z "$2" ]; then
-	    view_alerts
-	else
-	    match_pairs "$2"
-	    view_alerts "$pairs"
-	fi
+    "alert" )
+	pairs_cl="$1"
+	match_pairs "$1"
+	shift
+
+	alerts_cmd $*
 	;;
     "portfolio" )
-	view_portfolio "$2"
+	view_portfolio "$1"
 	;;
     * )
 	echo "[error] Unknown action: '${action}'"

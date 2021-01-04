@@ -41,7 +41,7 @@ def pretty_print_alerts(alerts, filter_only=[]):
 if __name__ == '__main__':
     if len(sys.argv) > 1:
         alerts = parse_jsonfile(sys.argv[1])
-        if len(sys.argv) > 2 and sys.argv[2]:
+        if len(sys.argv) > 2 and sys.argv[2] != "all":
             pretty_print_alerts(alerts, [int(x) for x in sys.argv[2].split(',')])
         else:
             pretty_print_alerts(alerts)

@@ -1,3 +1,46 @@
 
-Must copy investing_com.indexes into home path as ~/.investing_com.indexes .
 
+Hello, you can properly make use of investing.com tools in your command line shell!
+
+
+### Install and simple usage
+
+1) To install these scripts, you simply type:
+
+$ make install
+
+It will copy the files into your $HOME/bin directory. 
+
+2) Then, type:
+
+$ investing
+
+it will show the usage of it. 
+
+But, to proper make use of it, you will need to get your investing.com 
+token (logged in at the site), its the "ses_id" Cookie.
+
+3) Copy and paste this Cookie to the envvar $INVESTING_COM_TOKEN
+
+$ export INVESTING_COM_TOKEN="copy-pasta"
+
+Do it on your ~/.profile so you wont need to redo this everytime you open 
+your console.
+
+### Portfolios
+
+Usually the investing.com PortfolioID is urlencoded, so you must pick this ID
+and urldecode it. Usually I manually go to https://www.urldecoder.org/ and paste it.
+
+Aftwards, simply export it as an envvar:
+
+$ export INVESTING_COM_PORTFOLIO="url-decoded portfolioID"
+
+and now you can view your portfolio as:
+
+$ investing portfolio view
+
+There is a panel command that is in progress, that shows price in action into a 
+curses window.
+
+$ investing portfolio panel

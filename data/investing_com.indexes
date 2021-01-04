@@ -1,10 +1,12 @@
 us500=8839
 us100=8874
-ibov=1004
+ibov=941612
 uk100=8838
 silver=8836
 gold=8830
 plat=8910
+usdx=8827
+eurx=956731
 eurusd=1
 eurgbp=6
 eurjpy=9
@@ -15,3 +17,9 @@ oil=8849
 soy=8916
 wheat=8917
 corn=8918
+btc=945629
+eth=997650
+dot=1165465
+ada=1073899
+xrp=1075586
+
