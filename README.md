@@ -72,8 +72,8 @@ investing alert gold set around 1950 10 0 5
 Show all alerts arranged by pairs.
 
 ```
-$ investing alert view all
-$ investing alert view eurusd,eurjpy
+$ investing alert all view
+$ investing alert eurusd,eurjpy view
 ```
 
 # Portfolio usage
