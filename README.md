@@ -37,10 +37,10 @@
 There is basically two modes usage, you can setup a fixed alert or ranged alerts. But first, you
 must setup your session token ID from the site. 
 
-## Setup INVESTING_COM_SID env-var
+## Setup INVESTING_COM_TOKEN env-var
 
 Check your cookies from your browser and search for the `ses_id` from .investing.com. Copy the value
-and set to the environment variable INVESTING_COM_SID.
+and set to the environment variable INVESTING_COM_TOKEN.
 
 ## Fixed alert
 
